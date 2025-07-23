@@ -1,0 +1,4 @@
+# Pixi environments and build artefacts
+.pixi/
+neocore/build/
+__pycache__/
