@@ -1,0 +1,4 @@
+# Ignore Pixi environments and build artifacts
+.pixi/
+neocore/build/
+__pycache__/
