@@ -53,3 +53,4 @@ style.radix.integration
 style.tailwind.integration
 theme.switcher.toggle
 validation.schema.check
+components.modal_button
