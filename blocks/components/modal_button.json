@@ -1,0 +1,10 @@
+{
+  "label": "modal_button",
+  "domain": "components",
+  "subdomain": "button",
+  "tags": [
+    "bundle:modal"
+  ],
+  "props": {},
+  "mojo_kernel": "neocore/src/kernels/components/modal_button.mojo"
+}
