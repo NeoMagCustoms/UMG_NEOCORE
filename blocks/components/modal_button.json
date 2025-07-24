@@ -1,10 +1,30 @@
 {
-  "label": "modal_button",
-  "domain": "components",
-  "subdomain": "button",
-  "tags": [
-    "bundle:modal"
+  "block_id": "web__component_modal_button",
+  "domain": "web",
+  "subdomain": "component",
+  "label": "Modal Trigger Button",
+  "category": "component",
+  "molt_type": "Instruction",
+  "description": "A button that triggers a modal window.",
+  "tags": ["ui", "modal", "button", "trigger", "bundle:modal"],
+  "cantocore": "INSTRUCTION:MODAL_TRIGGER{on_click => open_modal()}",
+  "code_modules": [
+    {
+      "language": "mojo",
+      "code": "from modular.html import Button, Div\nfrom modular.behavior import on_click\n\n# Atomic kernel: opens a hidden modal div\npub fn modal_button_kernel():\n    open_btn = Button(\"Open Modal\", id=\"openModal\")\n    modal    = Div(\"This is a modal\", id=\"modal\", style=\"display:none\")\n\n    @on_click(target=\"openModal\")\n    fn show_modal():\n        modal.style.display = \"block\"\n\n    return (open_btn, modal)"
+    }
   ],
+  "ui_preview": "<button id=\"openModal\">Open Modal</button><div id=\"modal\" style=\"display:none;\">This is a modal</div><script>document.getElementById(\"openModal\").onclick=function(){document.getElementById(\"modal\").style.display=\"block\";}</script>",
+  "build_output": {
+    "target": "wasm",
+    "filename": ""
+  },
   "props": {},
-  "mojo_kernel": "neocore/src/kernels/components/modal_button.mojo"
+  "editable_fields": {},
+  "snap_config": {},
+  "display": {
+    "icon": "",
+    "color": ""
+  },
+  "version": "0.1.0"
 }
