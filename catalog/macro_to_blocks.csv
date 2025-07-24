@@ -51,3 +51,4 @@ Body Parser / Cookie Parser,middleware.body.parse,✅
 CORS Handler,middleware.cors.handle,✅
 Request Logger,middleware.request.log,✅
 Response Wrapper,middleware.response.wrap,✅
+Modals / Dialogs,component.modal.dialog|components.modal_button,✅
