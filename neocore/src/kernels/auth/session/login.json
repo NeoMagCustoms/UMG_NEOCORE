@@ -1,0 +1,6 @@
+{
+  "block_id": "auth.session.login",
+  "molt_type": "Instruction",
+  "category": "session",
+  "description": "Implements login for session"
+}

@@ -1,0 +1,6 @@
+{
+  "block_id": "component.modal.open",
+  "molt_type": "Instruction",
+  "category": "modal",
+  "description": "Implements open for modal"
+}

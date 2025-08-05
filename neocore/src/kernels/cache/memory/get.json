@@ -1,0 +1,6 @@
+{
+  "block_id": "cache.memory.get",
+  "molt_type": "Instruction",
+  "category": "memory",
+  "description": "Implements get for memory"
+}

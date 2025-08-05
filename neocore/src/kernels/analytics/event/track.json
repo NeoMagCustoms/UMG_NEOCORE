@@ -1,0 +1,6 @@
+{
+  "block_id": "analytics.event.track",
+  "molt_type": "Instruction",
+  "category": "event",
+  "description": "Implements track for event"
+}
