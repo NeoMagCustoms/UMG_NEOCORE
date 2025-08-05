@@ -6,28 +6,29 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        shell: bash -l {0}      # <- keeps Pixi PATH for every step
-    steps:
-      - uses: actions/checkout@v4
+        shell: bash -l {0}          # keeps Pixi on PATH for every step
 
-      - uses: prefix-dev/setup-pixi@v1
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Pixi & Modular tool‑chain
+        uses: prefix-dev/setup-pixi@v1
         with:
           cache: true
 
-      - name: Install dependencies
+      - name: Resolve environment
         run: pixi install
 
-      - name: Generate stub kernels
-        run: |
-          pixi run python scripts/gen_kernels.py \
-            --max 1500                       # optional arg (see patch below)
+      - name: Generate stub kernels (max 1500)
+        run: pixi run python scripts/gen_kernels.py --max 1500
 
-      - name: Run tests (placeholder ok)
+      - name: Run tests (placeholder)
         run: |
           cd neocore
           pixi run pytest -q || echo "No tests yet"
 
-      # Optional Mojo compilation—uncomment when kernels compile
+      # Uncomment after stub kernels compile
       # - name: Build all Mojo kernels
       #   run: |
       #     find neocore/src/kernels -name '*.mojo' \
