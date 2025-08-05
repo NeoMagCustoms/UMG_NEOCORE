@@ -1,6 +1,4 @@
 
-Below is a complete README.md you can paste directly into the root of your UMG_NEOCORE repository. It follows standard GitHub conventions (title, badges placeholder, TOC, fenced code blocks, mermaid diagrams) and is ready for immediate commit.
-
 
 ---
 
