@@ -1,0 +1,14 @@
+name: Build & Test
+on: [push, pull_request]
+jobs:
+  pixi:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: prefix-dev/setup-pixi@v0
+      - run: pixi install
+        working-directory: neocore
+      - run: pixi run python neocore/scripts/gen_kernels.py
+      - run: find neocore/src/kernels -name '*.mojo' | xargs -I{} mojo build {} --emit shared-lib -o neocore/build
+      - run: pixi run pytest
+        working-directory: neocore
