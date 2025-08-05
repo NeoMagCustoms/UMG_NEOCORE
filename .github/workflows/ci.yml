@@ -1,26 +1,34 @@
-name: Build & Test
+name: NeoCore CI
 on: [push, pull_request]
 
 jobs:
-  neo-core:
+  build:
     runs-on: ubuntu-latest
-
+    defaults:
+      run:
+        shell: bash -l {0}      # <- keeps Pixi PATH for every step
     steps:
       - uses: actions/checkout@v4
 
-      # 1. Install Pixi + Modular tool‑chain
-      - uses: prefix-dev/setup-pixi@v0
-      - run: pixi install
+      - uses: prefix-dev/setup-pixi@v1
+        with:
+          cache: true
 
-      # 2. Generate missing Mojo stubs from the CSV
-      - run: pixi run python scripts/gen_kernels.py
+      - name: Install dependencies
+        run: pixi install
 
-      # 3. Run Python tests (or placeholder if none yet)
-      - run: |
+      - name: Generate stub kernels
+        run: |
+          pixi run python scripts/gen_kernels.py \
+            --max 1500                       # optional arg (see patch below)
+
+      - name: Run tests (placeholder ok)
+        run: |
           cd neocore
-          pixi run pytest -q || echo "no tests yet"
+          pixi run pytest -q || echo "No tests yet"
 
-      # 4. Optional: build all Mojo kernels (uncomment later when it's stable)
-      #- run: |
-      #    find neocore/src/kernels -name '*.mojo' \
-      #      | xargs -I{} mojo build {} --emit shared-lib -o neocore/build
+      # Optional Mojo compilation—uncomment when kernels compile
+      # - name: Build all Mojo kernels
+      #   run: |
+      #     find neocore/src/kernels -name '*.mojo' \
+      #       | xargs -I{} mojo build {} --emit shared-lib -o neocore/build
