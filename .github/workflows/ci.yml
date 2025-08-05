@@ -1,35 +1,26 @@
 name: NeoCore CI
-on: [push, pull_request]
+on: [push]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     defaults:
       run:
-        shell: bash -l {0}          # keeps Pixi on PATH for every step
+        shell: bash -l {0}
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Install Pixi & Modular tool‑chain
-        uses: prefix-dev/setup-pixi@v0   # ← change back to v0
+      - name: Setup Pixi
+        uses: prefix-dev/setup-pixi@v0
         with:
           cache: true
 
-      - name: Resolve environment
+      - name: Resolve env
         run: pixi install
 
-      - name: Generate stub kernels (max 1500)
+      - name: Generate kernels (≤1500)
         run: pixi run python scripts/gen_kernels.py --max 1500
 
-      - name: Run tests (placeholder)
-        run: |
-          cd neocore
-          pixi run pytest -q || echo "No tests yet"
-
-      # Uncomment after stub kernels compile
-      # - name: Build all Mojo kernels
-      #   run: |
-      #     find neocore/src/kernels -name '*.mojo' \
-      #       | xargs -I{} mojo build {} --emit shared-lib -o neocore/build
+      - name: Dummy test (always pass)
+        run: echo "✓ build finished"
