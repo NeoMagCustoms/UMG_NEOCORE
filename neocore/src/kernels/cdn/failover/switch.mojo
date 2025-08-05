@@ -1,0 +1,6 @@
+@compiler.register("cdn.failover.switch")
+struct Switch:
+    @staticmethod
+    fn execute() -> Void:
+        # TODO: implement
+        return

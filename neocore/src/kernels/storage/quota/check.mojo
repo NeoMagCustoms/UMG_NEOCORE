@@ -1,0 +1,6 @@
+@compiler.register("storage.quota.check")
+struct Check:
+    @staticmethod
+    fn execute() -> Void:
+        # TODO: implement
+        return
