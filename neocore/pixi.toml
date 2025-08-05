@@ -1,9 +1,11 @@
-[workspace]
+[project]
 name = "neocore"
+version = "0.1.0"
 channels = [
   "https://conda.modular.com/max-nightly",
   "conda-forge"
 ]
-dependencies = ["modular"]
-platforms = ["linux-64"]
-version = "0.1.0"
+platforms = ["win-64"]
+
+[dependencies]
+modular = "*"
