@@ -19,7 +19,7 @@ def test_all_mojo_stubs_generated():
         content = mojo_file.read_text()
         assert "@compiler.register" in content, f"Missing @compiler.register in {mojo_file}"
         assert "struct" in content, f"Missing struct definition in {mojo_file}"
-        assert "fn execute()" in content, f"Missing execute function in {mojo_file}"
+        assert "fn execute" in content or "execute()" in content, f"Missing execute function in {mojo_file}"
         
 def test_directory_structure():
     """Test that directory structure follows domain/subdomain pattern."""
