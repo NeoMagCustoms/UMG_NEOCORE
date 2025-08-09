@@ -1,0 +1,12 @@
+[build-system]
+requires = ["setuptools","wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "neo_umg"
+version = "0.1.0"
+requires-python = ">=3.11"
+dependencies = ["jinja2","pandas"]
+
+[tool.setuptools]
+packages = ["neo_umg"]

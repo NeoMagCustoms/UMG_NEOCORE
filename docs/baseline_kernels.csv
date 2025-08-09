@@ -1,0 +1,7 @@
+name,description
+web.html.tag.div,Render a <div> with attributes and children
+web.html.tag.span,Render a <span> with attributes and children
+text.parse.markdown,Convert markdown to HTML
+io.fs.readfile,Read a text file (UTF-8)
+io.fs.writefile,Write a text file (UTF-8, create dirs)
+web.router.map,Map route -> content (simple dictionary)

@@ -10,3 +10,8 @@ platforms = ["linux-64", "osx-64", "win-64"]
 [dependencies]
 python = "3.11.*"
 pytest = "*"
+
+[tasks]
+validate = "python ../scripts/validate_block_names.py"
+gen-kernels = "python ../scripts/gen_kernels.py"
+test = "pytest"

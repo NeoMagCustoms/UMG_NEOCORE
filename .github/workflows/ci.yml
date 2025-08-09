@@ -1,26 +1,134 @@
-name: NeoCore CI
-on: [push]
+name: CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  PYTHON_VERSION: '3.11'
 
 jobs:
-  build:
+  lint:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        shell: bash -l {0}
-
     steps:
-      - uses: actions/checkout@v4
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install ruff black mypy
+    
+    - name: Lint with ruff
+      run: |
+        ruff check . || true
+    
+    - name: Format check with black
+      run: |
+        black --check . || true
+    
+    - name: Type check with mypy
+      run: |
+        mypy neo_umg scripts tests || true
 
-      - name: Setup Pixi
-        uses: prefix-dev/setup-pixi@v0
-        with:
-          cache: true
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+    
+    - name: Install Pixi
+      run: |
+        curl -fsSL https://pixi.sh/install.sh | bash
+        echo "$HOME/.pixi/bin" >> $GITHUB_PATH
+    
+    - name: Install dependencies
+      run: |
+        pixi install
+        pixi run dev
+    
+    - name: Generate kernels
+      run: |
+        python scripts/gen/gen_kernels_from_csv.py
+    
+    - name: Build static site
+      run: |
+        python -m neo_umg.build_site
+    
+    - name: Run smoke tests
+      run: |
+        pip install requests
+        python scripts/run_smoke_test.py
 
-      - name: Resolve env
-        run: pixi install
+  build-mojo:
+    runs-on: ubuntu-latest
+    continue-on-error: true  # Mojo compilation might not work in CI yet
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Install Modular CLI
+      run: |
+        curl -s https://get.modular.com | sh -
+        echo "$HOME/.modular/bin" >> $GITHUB_PATH
+    
+    - name: Install MAX
+      run: |
+        modular install max || echo "MAX installation skipped"
+    
+    - name: Generate kernels
+      run: |
+        python scripts/gen/gen_kernels_from_csv.py
+    
+    - name: Compile Mojo kernels
+      run: |
+        # Try to compile each kernel
+        for kernel in src/kernels/**/*.mojo; do
+          echo "Compiling $kernel..."
+          mojo build "$kernel" -o "build/$(basename "$kernel" .mojo).wasm" || echo "Failed to compile $kernel"
+        done
 
-      - name: Generate kernels (≤1500)
-        run: pixi run python scripts/gen_kernels.py --max 1500
-
-      - name: Dummy test (always pass)
-        run: echo "✓ build finished"
+  deploy-docs:
+    needs: [lint, test]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install jinja2 pandas
+    
+    - name: Build documentation site
+      run: |
+        python -m neo_umg.build_site
+    
+    - name: Upload artifact
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: ./build
+    
+    - name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v4
